@@ -2,7 +2,7 @@
 
 ## About ##
 
-Capture Ember CLI proxy serer responses for faster playback on the
+Capture Ember CLI proxy server responses for faster playback on the
 second run.
 
 ## Install ##
