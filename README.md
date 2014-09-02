@@ -14,7 +14,12 @@ npm install ember-cli-proxy-fixtures --save-dev
 ## Usage ##
 
 You must start the ember app with a proxy in order to use the proxy
-server.
+fixtures.
+
+All proxy fixtures are saved to `tests/fixtures/proxy`. They will be namedspaced under a 
+directory matching the module name for the test and each file name will
+match the test itself. Contained within is the captured requests and the
+recorded responses for playback.
 
 ## Authors ##
 
