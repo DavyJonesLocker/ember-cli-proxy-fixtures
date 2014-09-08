@@ -7,7 +7,7 @@ second run.
 
 This is only intended for use with the test suite. The idea is in some
 cases you may be running your integration tests against a live server
-taht is also running in its test environment. Making those requests,
+that is also running in its test environment. Making those requests,
 even though it is local, can add up for a large integration suite.
 Especially if you are blocking requests on database rollbacks and
 fixture inserts. If you are controlling these via API endpoints on the
@@ -25,18 +25,18 @@ npm install ember-cli-proxy-fixtures --save-dev
 You must start the ember app with a proxy in order to use the proxy
 fixtures.
 
-All proxy fixtures are saved to `tests/fixtures/proxy`. They will be namedspaced under a 
-directory matching the module name for the test and each file name will
+All proxy fixtures are saved to `tests/fixtures/proxy`. They will be namespaced
+under a directory matching the module name for the test and each file name will
 match the test itself. Contained within is the captured requests and the
 recorded responses for playback.
 
-The first time you run the test suite it will record all information
-then write to the fixture files after the test suite is complete.
-Multiple requests to the same endpoint for a test will be recorded
-multiple times and played back via an offset. This module treats each
+The first time you run the test suite it will record all information then write
+to the fixture files after the test suite is complete.  Multiple requests to the
+same endpoint for a test will be recorded multiple times and played back via an
+offset. This module treats each
 response as unique.
 
-If you have made changes to the server and expect different response
+If you have made changes to the server and expect a different response
 simply run:
 
 ```
