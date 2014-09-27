@@ -49,13 +49,17 @@ module.exports = {
   },
   serverMiddleware: function(options) {
     this.project.liveReloadFilterPatterns.push('tests/fixtures/proxy');
-    var app = options.app;
-    options = options.options;
 
-    if (options.proxy) {
-      options.srcDir = path.join(this.project.root, 'tests/fixtures/proxy');
-      app.use(middleware(options));
+    if (options.options.proxy) {
+      this.middleware(options.app, options.options);
     }
+  },
+  middleware: function(app, options) {
+    options.srcDir = path.join(this.project.root, 'tests/fixtures/proxy');
+    app.use(middleware(options));
+  },
+  testemMiddleware: function(app) {
+    this.middleware(app, {});
   },
   postprocessTree: function(type, tree) {
     var treeTestLoader = pickFiles(tree, {
