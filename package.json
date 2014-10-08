@@ -29,9 +29,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "mkdirp": "0.5.0",
-    "ember-cli-pretender": "0.2.3",
-    "broccoli-json-concat": "0.0.4"
+    "body-parser": "^1.9.0",
+    "broccoli-json-concat": "0.0.4",
+    "mkdirp": "0.5.0"
   },
   "devDependencies": {
     "assert": "1.1.2",
