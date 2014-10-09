@@ -6,7 +6,12 @@ var middleware = require('./lib/middleware');
 
 module.exports = {
   name: 'ember-cli-proxy-fixtures',
+  validEnv: function() {
+    return this.app.env !== 'production' && this.app.env !== 'staging';
+  },
   treeForVendor: function() {
+    if(!this.validEnv()) { return; }
+
     var proxyFixturesPath = path.join(this.app.project.root, 'tests/fixtures/proxy');
     if (!fs.existsSync(proxyFixturesPath)) {
       mkdirp.sync(proxyFixturesPath);
@@ -30,11 +35,16 @@ module.exports = {
   },
   included: function(app) {
     this.app = app;
+
+    if(!this.validEnv()) { return; }
+
     app.import('vendor/qunit-proxy-fixtures.js', {
       type: 'test'
     });
   },
   serverMiddleware: function(options) {
+    if(!this.validEnv()) { return; }
+
     this.project.liveReloadFilterPatterns.push('tests/fixtures/proxy');
 
     if (options.options.proxy) {
@@ -46,9 +56,13 @@ module.exports = {
     app.use(middleware(options));
   },
   testemMiddleware: function(app) {
+    if(!this.validEnv()) { return; }
+
     this.middleware(app, {});
   },
   postprocessTree: function(type, tree) {
+    if(!this.validEnv()) { return tree; }
+
     this._requireBuildPackages();
 
     var treeTestLoader = this.pickFiles(tree, {
