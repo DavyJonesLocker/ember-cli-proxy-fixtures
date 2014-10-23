@@ -7,9 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "start": "ember server",
-    "build": "ember build",
-    "test": "ember test"
+    "test": "mocha tests/**/*.js"
   },
   "repository": {
     "type": "git",
@@ -41,13 +39,7 @@
     "broccoli-file-mover": "0.3.6"
   },
   "devDependencies": {
-    "body-parser": "^1.2.0",
-    "broccoli-asset-rev": "0.0.17",
-    "broccoli-ember-hbs-template-compiler": "^1.6.1",
-    "ember-cli": "0.0.42",
-    "ember-cli-ember-data": "0.1.0",
-    "ember-cli-ic-ajax": "0.1.1",
-    "ember-cli-qunit": "0.0.5",
-    "express": "^4.8.5"
+    "mocha": "1.21.4",
+    "assert": "1.1.2"
   }
 }
