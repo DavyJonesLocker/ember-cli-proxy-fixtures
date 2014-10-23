@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-proxy-fixtures",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Capture Ember CLI proxy server responses for faster playback on the second run.",
   "directories": {
     "doc": "doc",
