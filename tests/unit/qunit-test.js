@@ -25,7 +25,13 @@ describe('QUnit Injection', function() {
   describe('$.ajaxSetup', function() {
     var testStart, testDone, spy, details;
     beforeEach(function() {
-      QUnit.begin     = function(fn) { fn(); return this; };
+      QUnit.begin = function(fn) {
+        // This fn must be called as the passed in fn called $.ajax which sets
+        // useProxyFixtures to true which is required for all these tests to
+        // work.
+        fn();
+        return this;
+      };
       QUnit.testStart = function(fn) { testStart = fn.bind(this); }
       QUnit.testDone  = function(fn) { testDone = fn.bind(this); }
 
