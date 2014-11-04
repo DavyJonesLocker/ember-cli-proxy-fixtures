@@ -34,7 +34,8 @@
     "broccoli-json-concat": "0.0.4"
   },
   "devDependencies": {
+    "assert": "1.1.2",
     "mocha": "1.21.4",
-    "assert": "1.1.2"
+    "sinon": "1.11.1"
   }
 }
