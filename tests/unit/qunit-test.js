@@ -98,12 +98,22 @@ function resetGlobals() {
     done: noop,
     config: {}
   };
-  global.Ember = {
-    '$': {
-      ajax: function(options) { return jqPromiseProxy(); }
+
+  global.$ = function() {
+    return {
+      on: noop,
+      off: noop
     }
   };
-  global.Pretender = null;
-  global.window = {};
+  global.$.ajax = function(options) { return jqPromiseProxy(); }
+  global.$.mockjax = noop;
+  global.$.mockjax.clear = noop;
+
+  global.Ember = {
+    '$': global.$
+  };
+
+  global.window   = {};
+  global.document = {};
 }
 
