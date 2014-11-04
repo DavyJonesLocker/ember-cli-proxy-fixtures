@@ -1,12 +1,13 @@
+// Sinon must be required prior to resetGloals being called. This is because
+// resetGlobals sets the `window` object and sinon will pick it up and think
+// it's in the browser
+var sinon = require('sinon');
+
+resetGlobals();
 var assert        = require('assert');
-var sinon         = require('sinon');
 var proxyFixtures = require('../../lib/qunit');
 
 describe('QUnit Injection', function() {
-  before(function() {
-    resetGlobals();
-  });
-
   describe('calls QUnit lifecycle methods', function() {
     var spy;
     beforeEach(function() {
