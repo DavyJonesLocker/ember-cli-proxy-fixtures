@@ -67,6 +67,16 @@ describe('QUnit Injection', function() {
       }));
     });
   });
+
+  describe('QUnit config', function() {
+    beforeEach(function() {
+      proxyFixtures('proxyFixtures');
+    });
+
+    it('disables autostart', function() {
+      assert(QUnit.config.autostart === false);
+    });
+  });
 });
 
 function noop() { return this; }
