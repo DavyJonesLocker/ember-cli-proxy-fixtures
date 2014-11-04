@@ -23,28 +23,40 @@ describe('QUnit Injection', function() {
   });
 
   describe('$.ajaxSetup', function() {
-    var testStart, spy;
+    var testStart, testDone, spy, details;
     beforeEach(function() {
       QUnit.begin     = function(fn) { fn(); return this; };
       QUnit.testStart = function(fn) { testStart = fn.bind(this); }
+      QUnit.testDone  = function(fn) { testDone = fn.bind(this); }
 
       spy               = sinon.spy();
       Ember.$.ajaxSetup = spy;
       proxyFixtures('proxyFixtures');
-    });
 
-    it('sets headers', function() {
-      var details = {
+      details = {
         module: 'Test',
         name: 'Works'
       };
+    });
 
+    it('sets headers on testStart', function() {
       testStart(details);
 
       assert(spy.calledWith({
         headers: {
           'x-module-name': details.module,
           'x-test-name':   details.name
+        }
+      }));
+    });
+
+    it('resets headers on testDone', function() {
+      testDone();
+
+      assert(spy.calledWith({
+        headers: {
+          'x-module-name': undefined,
+          'x-test-name':   undefined
         }
       }));
     });
