@@ -38,7 +38,7 @@ describe('ProxyFixtures', function() {
 
   describe('#QUnitTestStart', function() {
     describe('$.ajaxSetup', function() {
-      var spy, details, hookIntoQUnit;
+      var spy, hookIntoQUnit;
       beforeEach(function() {
         spy               = sinon.spy();
         Ember.$.ajaxSetup = spy;
@@ -47,11 +47,6 @@ describe('ProxyFixtures', function() {
 
         initProxyFixtures();
         proxyFixtures.useProxyFixtures = true;
-
-        details = {
-          module: 'Test',
-          name: 'Works'
-        };
       });
 
       afterEach(function() {
@@ -59,6 +54,11 @@ describe('ProxyFixtures', function() {
       });
 
       it('sets headers on testStart', function() {
+        var details = {
+          module: 'Test',
+          name: 'Works'
+        };
+
         proxyFixtures.testStart(details);
 
         assert(spy.calledWith({
