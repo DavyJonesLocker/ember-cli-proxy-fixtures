@@ -5,7 +5,8 @@ var sinon = require('sinon');
 
 resetGlobals();
 var assert        = require('assert');
-var proxyFixtures = require('../../lib/qunit');
+var qunit         = require('../../lib/qunit');
+var proxyFixtures = qunit.proxyFixtures;
 
 describe('QUnit Injection', function() {
   describe('calls QUnit lifecycle methods', function() {
