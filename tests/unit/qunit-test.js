@@ -6,76 +6,79 @@ var sinon = require('sinon');
 resetGlobals();
 var assert        = require('assert');
 var ProxyFixtures = require('../../lib/qunit');
+var proxyFixtures;
 
-describe('QUnit Injection', function() {
-  describe('calls QUnit lifecycle methods', function() {
-    var spy;
-    beforeEach(function() {
-      spy = sinon.spy();
+describe('ProxyFixtures', function() {
+  describe('QUnit injection', function() {
+    describe('calls lifecycle methods on init', function() {
+      var spy;
+      beforeEach(function() {
+        spy = sinon.spy();
+      });
+
+      ['testStart', 'testDone', 'begin', 'done'].forEach(function(method) {
+        it('#' + method, function() {
+          QUnit[method] = spy;
+          initProxyFixtures();
+          assert(spy.called);
+        });
+      });
     });
 
-    ['testStart', 'testDone', 'begin', 'done'].forEach(function(method) {
-      it(method, function() {
-        QUnit[method] = spy;
+    describe('config', function() {
+      beforeEach(function() {
         initProxyFixtures();
-        assert(spy.called);
+      });
+
+      it('disables autostart', function() {
+        assert(QUnit.config.autostart === false);
       });
     });
   });
 
-  describe('$.ajaxSetup', function() {
-    var testStart, testDone, spy, details;
-    beforeEach(function() {
-      QUnit.begin = function(fn) {
-        // This fn must be called as the passed in fn called $.ajax which sets
-        // useProxyFixtures to true which is required for all these tests to
-        // work.
-        fn();
-        return this;
-      };
-      QUnit.testStart = function(fn) { testStart = fn.bind(this); }
-      QUnit.testDone  = function(fn) { testDone = fn.bind(this); }
+  describe('#QUnitTestStart', function() {
+    describe('$.ajaxSetup', function() {
+      var spy, details, hookIntoQUnit;
+      beforeEach(function() {
+        spy               = sinon.spy();
+        Ember.$.ajaxSetup = spy;
 
-      spy               = sinon.spy();
-      Ember.$.ajaxSetup = spy;
-      initProxyFixtures();
+        hookIntoQUnit = sinon.stub(ProxyFixtures.prototype, 'hookIntoQUnit', noop);
 
-      details = {
-        module: 'Test',
-        name: 'Works'
-      };
-    });
+        initProxyFixtures();
+        proxyFixtures.useProxyFixtures = true;
 
-    it('sets headers on testStart', function() {
-      testStart(details);
+        details = {
+          module: 'Test',
+          name: 'Works'
+        };
+      });
 
-      assert(spy.calledWith({
-        headers: {
-          'x-module-name': details.module,
-          'x-test-name':   details.name
-        }
-      }));
-    });
+      afterEach(function() {
+        hookIntoQUnit.restore();
+      });
 
-    it('resets headers on testDone', function() {
-      testDone();
+      it('sets headers on testStart', function() {
+        proxyFixtures.testStart(details);
 
-      assert(spy.calledWith({
-        headers: {
-          'x-module-name': undefined,
-          'x-test-name':   undefined
-        }
-      }));
-    });
-  });
+        assert(spy.calledWith({
+          headers: {
+            'x-module-name': details.module,
+            'x-test-name':   details.name
+          }
+        }));
+      });
 
-  describe('QUnit config', function() {
-    beforeEach(function() {
-      initProxyFixtures();
-    });
+      it('resets headers on testDone', function() {
+        proxyFixtures.testDone();
 
-    it('disables autostart', function() {
-      assert(QUnit.config.autostart === false);
+        assert(spy.calledWith({
+          headers: {
+            'x-module-name': undefined,
+            'x-test-name':   undefined
+          }
+        }));
+      });
     });
   });
 });
@@ -118,5 +121,5 @@ function resetGlobals() {
 }
 
 function initProxyFixtures() {
-  new ProxyFixtures('proxyFixtures');
+  proxyFixtures = new ProxyFixtures('proxyFixtures');
 }
