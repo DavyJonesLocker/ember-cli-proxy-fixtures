@@ -5,8 +5,7 @@ var sinon = require('sinon');
 
 resetGlobals();
 var assert        = require('assert');
-var qunit         = require('../../lib/qunit');
-var proxyFixtures = qunit.proxyFixtures;
+var ProxyFixtures = require('../../lib/qunit');
 
 describe('QUnit Injection', function() {
   describe('calls QUnit lifecycle methods', function() {
@@ -18,7 +17,7 @@ describe('QUnit Injection', function() {
     ['testStart', 'testDone', 'begin', 'done'].forEach(function(method) {
       it(method, function() {
         QUnit[method] = spy;
-        proxyFixtures('proxyFixtures');
+        initProxyFixtures();
         assert(spy.called);
       });
     });
@@ -39,7 +38,7 @@ describe('QUnit Injection', function() {
 
       spy               = sinon.spy();
       Ember.$.ajaxSetup = spy;
-      proxyFixtures('proxyFixtures');
+      initProxyFixtures();
 
       details = {
         module: 'Test',
@@ -72,7 +71,7 @@ describe('QUnit Injection', function() {
 
   describe('QUnit config', function() {
     beforeEach(function() {
-      proxyFixtures('proxyFixtures');
+      initProxyFixtures();
     });
 
     it('disables autostart', function() {
@@ -118,3 +117,6 @@ function resetGlobals() {
   global.document = {};
 }
 
+function initProxyFixtures() {
+  new ProxyFixtures('proxyFixtures');
+}
