@@ -1,19 +1,17 @@
-// Sinon must be required prior to resetGloals being called. This is because
-// resetGlobals sets the `window` object and sinon will pick it up and think
-// it's in the browser
-var sinon = require('sinon');
-
 resetGlobals();
-var assert        = require('assert');
 var ProxyFixtures = require('../../lib/qunit');
+
 var proxyFixtures;
+function initProxyFixtures() {
+  proxyFixtures = new ProxyFixtures('proxyFixtures');
+}
 
 describe('ProxyFixtures', function() {
   describe('QUnit injection', function() {
     describe('calls lifecycle methods on init', function() {
       var spy;
       beforeEach(function() {
-        spy = sinon.spy();
+        spy = this.sinon.spy();
       });
 
       ['testStart', 'testDone', 'begin', 'done'].forEach(function(method) {
@@ -38,19 +36,15 @@ describe('ProxyFixtures', function() {
 
   describe('#QUnitTestStart', function() {
     describe('$.ajaxSetup', function() {
-      var spy, hookIntoQUnit;
+      var spy;
       beforeEach(function() {
-        spy               = sinon.spy();
+        spy               = this.sinon.spy();
         Ember.$.ajaxSetup = spy;
 
-        hookIntoQUnit = sinon.stub(ProxyFixtures.prototype, 'hookIntoQUnit', noop);
+        this.sinon.stub(ProxyFixtures.prototype, 'hookIntoQUnit', noop);
 
         initProxyFixtures();
         proxyFixtures.useProxyFixtures = true;
-      });
-
-      afterEach(function() {
-        hookIntoQUnit.restore();
       });
 
       it('sets headers on testStart', function() {
@@ -82,44 +76,3 @@ describe('ProxyFixtures', function() {
     });
   });
 });
-
-function noop() { return this; }
-
-function jqPromiseProxy() {
-  return {
-    done: function(fn) { fn(); return this; },
-    always: function(fn) { fn(); return this; }
-  }
-};
-
-function resetGlobals() {
-  global.QUnit = {
-    testStart: noop,
-    testDone: noop,
-    begin: noop,
-    start: noop,
-    done: noop,
-    config: {}
-  };
-
-  global.$ = function() {
-    return {
-      on: noop,
-      off: noop
-    }
-  };
-  global.$.ajax = function(options) { return jqPromiseProxy(); }
-  global.$.mockjax = noop;
-  global.$.mockjax.clear = noop;
-
-  global.Ember = {
-    '$': global.$
-  };
-
-  global.window   = {};
-  global.document = {};
-}
-
-function initProxyFixtures() {
-  proxyFixtures = new ProxyFixtures('proxyFixtures');
-}
