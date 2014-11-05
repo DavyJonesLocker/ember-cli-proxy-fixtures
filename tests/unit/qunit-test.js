@@ -34,43 +34,53 @@ describe('ProxyFixtures', function() {
   });
 
   describe('#testStart', function() {
-    describe('$.ajaxSetup', function() {
-      beforeEach(function() {
-        this.spy          = this.sinon.spy();
-        Ember.$.ajaxSetup = this.spy;
+    beforeEach(function() {
+      this.spy          = this.sinon.spy();
+      Ember.$.ajaxSetup = this.spy;
 
-        this.sinon.stub(ProxyFixtures.prototype, 'hookIntoQUnit', noop);
+      this.sinon.stub(ProxyFixtures.prototype, 'hookIntoQUnit', noop);
 
-        initProxyFixtures();
-        proxyFixtures.useProxyFixtures = true;
-      });
+      initProxyFixtures();
+      proxyFixtures.useProxyFixtures = true;
+    });
 
-      it('sets headers on testStart', function() {
-        var details = {
-          module: 'Test',
-          name: 'Works'
-        };
+    it('sets headers', function() {
+      var details = {
+        module: 'Test',
+        name: 'Works'
+      };
 
-        proxyFixtures.testStart(details);
+      proxyFixtures.testStart(details);
 
-        assert(this.spy.calledWith({
-          headers: {
-            'x-module-name': details.module,
-            'x-test-name':   details.name
-          }
-        }));
-      });
+      assert(this.spy.calledWith({
+        headers: {
+          'x-module-name': details.module,
+          'x-test-name':   details.name
+        }
+      }));
+    });
+  });
 
-      it('resets headers on testDone', function() {
-        proxyFixtures.testDone();
+  describe('#testDone', function() {
+    beforeEach(function() {
+      this.spy          = this.sinon.spy();
+      Ember.$.ajaxSetup = this.spy;
 
-        assert(this.spy.calledWith({
-          headers: {
-            'x-module-name': undefined,
-            'x-test-name':   undefined
-          }
-        }));
-      });
+      this.sinon.stub(ProxyFixtures.prototype, 'hookIntoQUnit', noop);
+
+      initProxyFixtures();
+      proxyFixtures.useProxyFixtures = true;
+    });
+
+    it('resets headers', function() {
+      proxyFixtures.testDone();
+
+      assert(this.spy.calledWith({
+        headers: {
+          'x-module-name': undefined,
+          'x-test-name':   undefined
+        }
+      }));
     });
   });
 });
