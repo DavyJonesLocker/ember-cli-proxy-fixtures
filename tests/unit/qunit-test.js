@@ -66,6 +66,44 @@ describe('ProxyFixtures', function() {
     });
   });
 
+  describe('#done', function() {
+    describe('useProxyFixtures === true', function() {
+      beforeEach(function() {
+        proxyFixtures.useProxyFixtures = true;
+      });
+
+      it('POST write-fixtures', function() {
+        proxyFixtures.cachedRequests = [1];
+
+        Ember.$.ajax = function(options) {
+          assert.deepEqual(options, {
+            type:         'POST',
+            url:          'write-fixtures',
+            contentType:  'application/json',
+            dataType:     'json',
+            data:         '[1]'
+          });
+        };
+
+        proxyFixtures.done();
+      });
+    });
+
+    describe('useProxyFixtures === false', function() {
+      beforeEach(function() {
+        proxyFixtures.useProxyFixtures = false;
+      })
+
+      it('returns early', function() {
+        Ember.$.ajax = function() {
+          assert(false, 'should not be called');
+        };
+
+        proxyFixtures.done();
+      });
+    });
+  });
+
   describe('#testStart', function() {
     beforeEach(function() {
       this.spy          = this.sinon.spy();
