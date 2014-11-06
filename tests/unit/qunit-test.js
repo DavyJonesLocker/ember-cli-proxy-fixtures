@@ -208,11 +208,71 @@ describe('ProxyFixtures', function() {
 
   describe('#cacheRequest', function() {
     describe('returns early', function() {
-      it('without x-module-name and x-test-name headers');
-      it('with x-mockjax-response === \'true\'');
+      beforeEach(function() {
+        proxyFixtures.headerStringObject = this.sinon.spy();
+        JSON.parse = this.sinon.spy();
+      });
+
+      it('without x-module-name and x-test-name headers', function() {
+        proxyFixtures.cacheRequest(null, null, {})
+        assert(!proxyFixtures.headerStringToObject.called,
+               'headerStringToObject should not be called');
+      });
+
+      it('with x-mockjax-response === \'true\'', function() {
+        proxyFixtures.cacheRequest(null, {
+          getAllResponseHeaders: function() {
+            return 'x-mockjax-response:true';
+          },
+          responseText: ''
+        }, {
+          headers: {
+            'x-module-name': 'test',
+            'x-test-name': 'test'
+          }
+        })
+
+        assert(!JSON.parse.called, 'JSON.parse should not be called');
+      });
     });
 
-    it('adds valid request to cachedRequests');
+    it('adds valid request to cachedRequests', function() {
+      assert.equal(proxyFixtures.cachedRequests.length, 0);
+
+      proxyFixtures.cacheRequest(null, {
+        getAllResponseHeaders: function() {
+          return 'x-random-header:false';
+        },
+        responseText: '{"user":{"name":"Jake"}}',
+        status: 200
+      }, {
+        url: 'http://localhost:4000/api/v1/users/1',
+        type: 'GET',
+        headers: {
+          'x-module-name': 'test',
+          'x-test-name': 'test'
+        }
+      });
+
+      assert.equal(proxyFixtures.cachedRequests.length, 1);
+      assert.deepEqual(proxyFixtures.cachedRequests[0], {
+        url:         'http://localhost:4000/api/v1/users/1',
+        statusCode:  200,
+        method:      'GET',
+        reqHeaders: {
+          'x-module-name': 'test',
+          'x-test-name': 'test'
+        },
+        headers: {
+          'x-random-header': 'false'
+        },
+        body: {
+          user: {
+            name: 'Jake'
+          }
+        }
+      });
+    });
   });
 
   describe('#parseUrl', function() {
