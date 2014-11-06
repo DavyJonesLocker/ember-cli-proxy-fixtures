@@ -33,6 +33,31 @@ describe('ProxyFixtures', function() {
     });
   });
 
+  describe('#begin', function() {
+    beforeEach(function() {
+      this.sinon.stub(ProxyFixtures.prototype, 'hookIntoQUnit', noop);
+      QUnit.start = this.sinon.spy();
+      initProxyFixtures();
+    });
+
+    it('DELETE /clear-fixtures', function() {
+      Ember.$.ajax = function(options) {
+        assert.equal(options.type, 'DELETE');
+        assert.equal(options.url, 'clear-fixtures');
+
+        return jqPromiseProxy();
+      }
+
+      proxyFixtures.begin();
+    });
+
+    it('calls QUnit.start', function() {
+      proxyFixtures.begin();
+
+      assert(QUnit.start.called, 'QUnit.start was called');
+    });
+  });
+
   describe('#testStart', function() {
     beforeEach(function() {
       this.spy          = this.sinon.spy();
