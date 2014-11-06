@@ -131,24 +131,44 @@ describe('ProxyFixtures', function() {
 
   describe('#testDone', function() {
     beforeEach(function() {
-      this.spy          = this.sinon.spy();
-      Ember.$.ajaxSetup = this.spy;
+      var offSpy = this.offSpy = this.sinon.spy();
+      Ember.$ = function() {
+        return { off: offSpy };
+      };
+      Ember.$.mockjax = {};
+      Ember.$.ajaxSetup = this.sinon.spy();
     });
 
     describe('useProxyFixtures === true', function() {
       beforeEach(function() {
+        Ember.$.mockjax.clear          = this.sinon.spy();
         proxyFixtures.useProxyFixtures = true;
       });
 
       it('resets headers', function() {
         proxyFixtures.testDone();
 
-        assert(this.spy.calledWith({
+        assert(Ember.$.ajaxSetup.calledWith({
           headers: {
             'x-module-name': undefined,
             'x-test-name':   undefined
           }
         }));
+      });
+
+      it('removes ajaxSuccess event handler', function() {
+        proxyFixtures.testDone();
+
+        var call = this.offSpy.getCall(0);
+
+        assert.equal(call.args[0], 'ajaxSuccess')
+        assert.equal(typeof call.args[1], 'function')
+      });
+
+      it('clears mockjax', function() {
+        proxyFixtures.testDone();
+
+        assert(Ember.$.mockjax.clear.called, 'mockjax.clear was not called');
       });
     });
 
@@ -160,7 +180,7 @@ describe('ProxyFixtures', function() {
       it('doesn\'t reset headers', function() {
         proxyFixtures.testDone();
 
-        assert(!this.spy.called, 'ajaxSetup should not be called');
+        assert(!Ember.$.ajaxSetup.called, 'ajaxSetup should not be called');
       });
     });
   });
