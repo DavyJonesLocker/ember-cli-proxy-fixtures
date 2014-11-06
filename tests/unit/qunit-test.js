@@ -2,11 +2,11 @@ resetGlobals();
 var ProxyFixtures = require('../../lib/qunit');
 
 var proxyFixtures;
-function initProxyFixtures() {
-  proxyFixtures = new ProxyFixtures('proxyFixtures');
-}
-
 describe('ProxyFixtures', function() {
+  beforeEach(function() {
+    proxyFixtures = new ProxyFixtures('proxyFixtures');
+  });
+
   describe('QUnit injection', function() {
     describe('calls lifecycle methods on init', function() {
       beforeEach(function() {
@@ -16,17 +16,15 @@ describe('ProxyFixtures', function() {
       ['testStart', 'testDone', 'begin', 'done'].forEach(function(method) {
         it('#' + method, function() {
           QUnit[method] = this.spy;
-          initProxyFixtures();
+
+          proxyFixtures.hookIntoQUnit();
+
           assert(this.spy.called, 'QUnit.' + method + ' was not called');
         });
       });
     });
 
     describe('config', function() {
-      beforeEach(function() {
-        initProxyFixtures();
-      });
-
       it('disables autostart', function() {
         assert(QUnit.config.autostart === false);
       });
@@ -35,9 +33,7 @@ describe('ProxyFixtures', function() {
 
   describe('#begin', function() {
     beforeEach(function() {
-      this.sinon.stub(ProxyFixtures.prototype, 'hookIntoQUnit', noop);
       QUnit.start = this.sinon.spy();
-      initProxyFixtures();
     });
 
     it('DELETE /clear-fixtures', function() {
@@ -75,9 +71,6 @@ describe('ProxyFixtures', function() {
       this.spy          = this.sinon.spy();
       Ember.$.ajaxSetup = this.spy;
 
-      this.sinon.stub(ProxyFixtures.prototype, 'hookIntoQUnit', noop);
-
-      initProxyFixtures();
       proxyFixtures.useProxyFixtures = true;
     });
 
@@ -103,9 +96,6 @@ describe('ProxyFixtures', function() {
       this.spy          = this.sinon.spy();
       Ember.$.ajaxSetup = this.spy;
 
-      this.sinon.stub(ProxyFixtures.prototype, 'hookIntoQUnit', noop);
-
-      initProxyFixtures();
       proxyFixtures.useProxyFixtures = true;
     });
 
