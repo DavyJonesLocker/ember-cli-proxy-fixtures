@@ -9,17 +9,13 @@ describe('ProxyFixtures', function() {
 
   describe('QUnit injection', function() {
     describe('calls lifecycle methods on init', function() {
-      beforeEach(function() {
-        this.spy = this.sinon.spy();
-      });
-
       ['testStart', 'testDone', 'begin', 'done'].forEach(function(method) {
         it('#' + method, function() {
-          QUnit[method] = this.spy;
+          QUnit[method] = this.sinon.spy();
 
           proxyFixtures.hookIntoQUnit();
 
-          assert(this.spy.called, 'QUnit.' + method + ' was not called');
+          assert(QUnit[method].called, 'QUnit.' + method + ' was not called');
         });
       });
     });
@@ -106,8 +102,7 @@ describe('ProxyFixtures', function() {
 
   describe('#testStart', function() {
     beforeEach(function() {
-      this.spy          = this.sinon.spy();
-      Ember.$.ajaxSetup = this.spy;
+      Ember.$.ajaxSetup = this.sinon.spy();
 
       proxyFixtures.useProxyFixtures = true;
     });
@@ -120,7 +115,7 @@ describe('ProxyFixtures', function() {
 
       proxyFixtures.testStart(details);
 
-      assert(this.spy.calledWith({
+      assert(Ember.$.ajaxSetup.calledWith({
         headers: {
           'x-module-name': details.module,
           'x-test-name':   details.name
