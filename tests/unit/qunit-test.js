@@ -56,6 +56,18 @@ describe('ProxyFixtures', function() {
 
       assert(QUnit.start.called, 'QUnit.start was called');
     });
+
+    it('sets useProxyFixtures to true', function() {
+      assert(!proxyFixtures.useProxyFixtures)
+      proxyFixtures.begin();
+      assert(proxyFixtures.useProxyFixtures)
+    });
+
+    it('resets cachedRequests', function() {
+      proxyFixtures.cachedRequests = [1,2,3];
+      proxyFixtures.begin();
+      assert.deepEqual(proxyFixtures.cachedRequests, [])
+    });
   });
 
   describe('#testStart', function() {
