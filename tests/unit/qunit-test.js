@@ -122,6 +122,25 @@ describe('ProxyFixtures', function() {
         }
       }));
     });
+
+    it('add ajaxSuccess listener');
+    it('returns early without fixture data');
+
+    describe('mockjax setup', function() {
+      describe('return early', function() {
+        it('url path doesn\'t match');
+        it('method doesn\'t match');
+      });
+
+      describe('param parsing', function() {
+        it('settings.data');
+        it('not settings.data');
+      });
+
+      describe('valid request', function() {
+        it('returns response');
+      });
+    });
   });
 
   describe('#testDone', function() {
@@ -178,5 +197,28 @@ describe('ProxyFixtures', function() {
         assert(!Ember.$.ajaxSetup.called, 'ajaxSetup should not be called');
       });
     });
+  });
+
+  describe('#escape', function() {
+    it('properly escapes a string');
+  });
+
+  describe('#cacheRequest', function() {
+    describe('returns early', function() {
+      it('without x-module-name and x-test-name headers');
+      it('with x-mockjax-response === \'true\'');
+    });
+
+    it('adds valid request to cachedRequests');
+  });
+
+  describe('#parseUrl', function() {
+    it('full url');
+    it('path');
+    it('query');
+  });
+
+  describe('#headerStringToObject', function() {
+    it('returns proper object');
   });
 });
