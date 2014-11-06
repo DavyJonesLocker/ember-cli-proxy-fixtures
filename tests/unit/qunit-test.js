@@ -200,7 +200,10 @@ describe('ProxyFixtures', function() {
   });
 
   describe('#escape', function() {
-    it('properly escapes a string');
+    it('escapes a \'', function() {
+      var escaped = proxyFixtures.escape('It\'s doing something');
+      assert.equal(escaped, 'It\\\'s doing something')
+    });
   });
 
   describe('#cacheRequest', function() {
@@ -213,12 +216,56 @@ describe('ProxyFixtures', function() {
   });
 
   describe('#parseUrl', function() {
-    it('full url');
-    it('path');
-    it('query');
+    it('full url', function() {
+      var url    = 'http://localhost/api';
+      var parsed = proxyFixtures.parseUrl(url);
+
+      assert.equal(parsed.url, url);
+    });
+
+    describe('path', function() {
+      it('with port', function() {
+        var url    = 'http://localhost:3000/api';
+        var parsed = proxyFixtures.parseUrl(url);
+
+        assert.equal(parsed.path, url);
+      });
+
+      it('without port', function() {
+        var url    = 'http://localhost/api';
+        var parsed = proxyFixtures.parseUrl(url);
+
+        assert.equal(parsed.path, url);
+      });
+    })
+
+    describe('query', function() {
+      it('is present', function() {
+        var url    = 'http://localhost/api?test=1';
+        var parsed = proxyFixtures.parseUrl(url);
+
+        assert.equal(parsed.query, 'test=1');
+      });
+
+      it('not present', function() {
+        var url    = 'http://localhost/api';
+        var parsed = proxyFixtures.parseUrl(url);
+
+        assert.equal(parsed.query, '');
+      });
+    });
   });
 
   describe('#headerStringToObject', function() {
-    it('returns proper object');
+    it('returns proper object', function() {
+      var headerString = 'x-module-name:test\nother-thing:blah\r\nsomething:w';
+      var parsed       = proxyFixtures.headerStringToObject(headerString);
+
+      assert.deepEqual(parsed, {
+        'x-module-name': 'test',
+        'other-thing': 'blah',
+        'something': 'w'
+      });
+    });
   });
 });

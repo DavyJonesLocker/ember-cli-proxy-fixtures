@@ -32,7 +32,8 @@ global.resetGlobals = function() {
   global.$.mockjax.clear = noop;
 
   global.Ember = {
-    '$': global.$
+    '$': global.$,
+    A: function(a) { return a; }
   };
 
   global.window   = {};
