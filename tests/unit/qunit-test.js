@@ -17,7 +17,7 @@ describe('ProxyFixtures', function() {
         it('#' + method, function() {
           QUnit[method] = this.spy;
           initProxyFixtures();
-          assert(this.spy.called);
+          assert(this.spy.called, 'QUnit.' + method + ' was not called');
         });
       });
     });
