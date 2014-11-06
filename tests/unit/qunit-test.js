@@ -133,19 +133,35 @@ describe('ProxyFixtures', function() {
     beforeEach(function() {
       this.spy          = this.sinon.spy();
       Ember.$.ajaxSetup = this.spy;
-
-      proxyFixtures.useProxyFixtures = true;
     });
 
-    it('resets headers', function() {
-      proxyFixtures.testDone();
+    describe('useProxyFixtures === true', function() {
+      beforeEach(function() {
+        proxyFixtures.useProxyFixtures = true;
+      });
 
-      assert(this.spy.calledWith({
-        headers: {
-          'x-module-name': undefined,
-          'x-test-name':   undefined
-        }
-      }));
+      it('resets headers', function() {
+        proxyFixtures.testDone();
+
+        assert(this.spy.calledWith({
+          headers: {
+            'x-module-name': undefined,
+            'x-test-name':   undefined
+          }
+        }));
+      });
+    });
+
+    describe('useProxyFixtures === false', function() {
+      beforeEach(function() {
+        proxyFixtures.useProxyFixtures = false;
+      });
+
+      it('doesn\'t reset headers', function() {
+        proxyFixtures.testDone();
+
+        assert(!this.spy.called, 'ajaxSetup should not be called');
+      });
     });
   });
 });
