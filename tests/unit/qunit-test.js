@@ -102,6 +102,10 @@ describe('ProxyFixtures', function() {
 
   describe('#testStart', function() {
     beforeEach(function() {
+      var onSpy = this.onSpy = this.sinon.spy();
+      Ember.$ = function() {
+        return { on: onSpy };
+      };
       Ember.$.ajaxSetup = this.sinon.spy();
 
       proxyFixtures.useProxyFixtures = true;
@@ -123,7 +127,15 @@ describe('ProxyFixtures', function() {
       }));
     });
 
-    it('add ajaxSuccess listener');
+    it('add ajaxSuccess listener', function() {
+      proxyFixtures.testStart({});
+
+      var call = this.onSpy.getCall(0);
+
+      assert.equal(call.args[0], 'ajaxSuccess')
+      assert.equal(typeof call.args[1], 'function')
+    });
+
     it('returns early without fixture data');
 
     describe('mockjax setup', function() {
