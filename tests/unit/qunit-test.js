@@ -170,8 +170,42 @@ describe('ProxyFixtures', function() {
 
     describe('mockjax setup', function() {
       describe('return early', function() {
-        it('url path doesn\'t match');
-        it('method doesn\'t match');
+        beforeEach(function() {
+          Ember.$.mockjax = this.sinon.stub();
+          Ember.keys = Object.keys;
+
+          window.proxyFixtures = {
+            'test': {
+              'test': {
+                'http://localhost:3000/api/v2/categories': {
+                  'get': {
+                    '': { }
+                  }
+                }
+              }
+            }
+          };
+
+          proxyFixtures.testStart({module: 'test', name: 'test'});
+
+          var call       = Ember.$.mockjax.getCall(0);
+          this.mockjaxFn = call.args[0];
+        });
+
+        it('url path doesn\'t match', function() {
+          var res = this.mockjaxFn({url: 'http://localhost:3000/api/v2/users'});
+
+          assert.equal(res, false);
+        });
+
+        it('method doesn\'t match', function() {
+          var res = this.mockjaxFn({
+            url: 'http://localhost:3000/api/v2/categories',
+            method: 'POST'
+          });
+
+          assert.equal(res, false);
+        });
       });
 
       describe('param parsing', function() {

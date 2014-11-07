@@ -33,7 +33,8 @@ global.resetGlobals = function() {
 
   global.Ember = {
     '$': global.$,
-    A: function(a) { return a; }
+    A: function(a) { return a; },
+    keys: Object.keys
   };
 
   global.window   = {};
