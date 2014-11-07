@@ -4,6 +4,10 @@ global.assert = require('assert');
 
 global.noop = function() { return this; }
 
+global.requireFixture = function(fixture) {
+  return require('./fixtures/' + fixture);
+}
+
 global.jqPromiseProxy = function() {
   return {
     done: function(fn) { fn(); return this; },

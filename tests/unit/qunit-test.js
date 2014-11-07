@@ -169,22 +169,16 @@ describe('ProxyFixtures', function() {
     });
 
     describe('mockjax setup', function() {
+      beforeEach(function() {
+        Ember.$.mockjax = this.sinon.stub();
+        Ember.keys = Object.keys;
+      });
+
       describe('return early', function() {
         beforeEach(function() {
-          Ember.$.mockjax = this.sinon.stub();
-          Ember.keys = Object.keys;
-
-          window.proxyFixtures = {
-            'test': {
-              'test': {
-                'http://localhost:3000/api/v2/categories': {
-                  'get': {
-                    '': { }
-                  }
-                }
-              }
-            }
-          };
+          window.proxyFixtures = { test: { test: {
+            "http://localhost:3000/api/v2/categories": {"get": {"": {}}}
+          }}};
 
           proxyFixtures.testStart({module: 'test', name: 'test'});
 
@@ -209,12 +203,90 @@ describe('ProxyFixtures', function() {
       });
 
       describe('param parsing', function() {
-        it('settings.data');
-        it('not settings.data');
+        beforeEach(function() {
+          window.proxyFixtures = requireFixture('valid-fixture');
+
+          proxyFixtures.testStart({module: 'test', name: 'test'});
+
+          var call       = Ember.$.mockjax.getCall(0);
+          this.mockjaxFn = call.args[0];
+
+          Ember.$.param = require('querystring').stringify;
+        });
+
+        it('settings.data', function() {
+          var res = this.mockjaxFn({
+            url: 'http://localhost:3000/api/v2/categories',
+            method: 'GET',
+            data: {
+              withQuery: 'yes'
+            }
+          });
+
+          assert.deepEqual(res, {
+            responseTime: 0,
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json; charset=utf-8',
+              'Cache-Control':'max-age=0, private, must-revalidate',
+              'x-mockjax-response': 'true'
+            },
+            responseText: {
+              categories: []
+            }
+          });
+        });
+
+        it('not settings.data', function() {
+          var res = this.mockjaxFn({
+            url: 'http://localhost:3000/api/v2/categories?withQuery=yes',
+            method: 'GET'
+          });
+
+          assert.deepEqual(res, {
+            responseTime: 0,
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json; charset=utf-8',
+              'Cache-Control':'max-age=0, private, must-revalidate',
+              'x-mockjax-response': 'true'
+            },
+            responseText: {
+              categories: []
+            }
+          });
+        });
       });
 
       describe('valid request', function() {
-        it('returns response');
+        beforeEach(function() {
+          window.proxyFixtures = requireFixture('valid-fixture');
+
+          proxyFixtures.testStart({module: 'test', name: 'test'});
+
+          var call       = Ember.$.mockjax.getCall(0);
+          this.mockjaxFn = call.args[0];
+        });
+
+        it('returns response', function() {
+          var res = this.mockjaxFn({
+            url: 'http://localhost:3000/api/v2/categories',
+            method: 'GET'
+          });
+
+          assert.deepEqual(res, {
+            responseTime: 0,
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json; charset=utf-8',
+              'Cache-Control':'max-age=0, private, must-revalidate',
+              'x-mockjax-response': 'true'
+            },
+            responseText: {
+              categories: []
+            }
+          });
+        });
       });
     });
   });

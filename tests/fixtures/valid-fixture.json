@@ -1,0 +1,44 @@
+{
+  "test": {
+    "test": {
+      "http://localhost:3000/api/v2/categories": {
+        "get": {
+          "": {
+            "fixtures": [
+              {
+                "statusCode": 200,
+                "headers": {
+                  "Content-Type": "application/json; charset=utf-8",
+                  "Cache-Control": "max-age=0, private, must-revalidate"
+                },
+                "body": "{\"categories\": []}"
+              }
+            ],
+            "offset": 0
+          },
+          "withQuery=yes": {
+            "fixtures": [
+              {
+                "statusCode": 200,
+                "headers": {
+                  "Content-Type": "application/json; charset=utf-8",
+                  "Cache-Control": "max-age=0, private, must-revalidate"
+                },
+                "body": "{\"categories\": []}"
+              },
+              {
+                "statusCode": 200,
+                "headers": {
+                  "Content-Type": "application/json; charset=utf-8",
+                  "Cache-Control": "max-age=0, private, must-revalidate"
+                },
+                "body": "{\"categories\": []}"
+              }
+            ],
+            "offset": 0
+          }
+        }
+      }
+    }
+  }
+}
