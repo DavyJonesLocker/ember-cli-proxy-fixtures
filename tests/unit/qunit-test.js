@@ -136,7 +136,37 @@ describe('ProxyFixtures', function() {
       assert.equal(typeof call.args[1], 'function')
     });
 
-    it('returns early without fixture data');
+    describe('returns early without fixture', function() {
+      beforeEach(function() {
+        Ember.keys = this.sinon.spy();
+        this.details = {
+          module: 'test',
+          name: 'test'
+        };
+      });
+
+      it('none', function() {
+        window.proxyFixtures = undefined;
+        proxyFixtures.testStart(this.details);
+
+        assert(!Ember.keys.called, 'keys should not be called')
+      });
+
+      it('no module', function() {
+        window.proxyFixtures = {};
+        proxyFixtures.testStart(this.details);
+
+        assert(!Ember.keys.called, 'keys should not be called')
+      });
+
+      it('no name', function() {
+        window.proxyFixtures = {};
+        window.proxyFixtures[this.details.module] = {};
+        proxyFixtures.testStart(this.details);
+
+        assert(!Ember.keys.called, 'keys should not be called')
+      });
+    });
 
     describe('mockjax setup', function() {
       describe('return early', function() {
