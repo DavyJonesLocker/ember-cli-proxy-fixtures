@@ -38,7 +38,12 @@ global.resetGlobals = function() {
   global.Ember = {
     '$': global.$,
     A: function(a) { return a; },
-    keys: Object.keys
+    keys: Object.keys,
+    run: {
+      bind: function(ctx, fn) {
+        return fn.bind(ctx);
+      }
+    }
   };
 
   global.window   = {};
