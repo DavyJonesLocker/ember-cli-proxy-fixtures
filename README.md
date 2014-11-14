@@ -18,12 +18,13 @@ module.
 
 ```bash
 npm install ember-cli-proxy-fixtures --save-dev
+ember generate ember-cli-proxy-fixtures
 ```
 
 ## Usage ##
 
-You must start the ember app with a proxy in order to use the proxy
-fixtures.
+All requests that `jQuery.ajax` will be captured through `jquery-mockjax`. This
+includes requests that go through ember-cli's proxy.
 
 All proxy fixtures are saved to `tests/fixtures/proxy`. They will be namespaced
 under a directory matching the module name for the test and each file name will
@@ -58,7 +59,7 @@ This library follows [Semantic Versioning](http://semver.org)
 
 ## Want to help? ##
 
-Please do! We are always looking to improve this gem. Please see our
+Please do! We are always looking to improve this addon. Please see our
 [Contribution Guidelines](https://github.com/dockyard/ember-cli-proxy-fixtures/blob/master/CONTRIBUTING.md)
 on how to properly submit issues and pull requests.
 
