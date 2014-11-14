@@ -25,8 +25,8 @@ module.exports = {
       mkdirp.sync(proxyFixturesPath);
     }
     var proxyTree = jsonConcat(proxyFixturesPath, {
-      outputFile: 'proxyFixtures.js',
-      variableName: 'window.proxyFixtures'
+      outputFile: 'fixtures.js',
+      variableName: 'window.fixtures'
     });
 
     var lib = this.treeGenerator(path.join(__dirname, 'lib'));
