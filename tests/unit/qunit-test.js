@@ -224,6 +224,8 @@ describe('ProxyFixtures', function() {
           });
 
           assert.deepEqual(res, {
+            status: 200,
+            statusText: undefined,
             responseTime: 0,
             method: 'GET',
             headers: {
@@ -244,6 +246,8 @@ describe('ProxyFixtures', function() {
           });
 
           assert.deepEqual(res, {
+            status: 200,
+            statusText: undefined,
             responseTime: 0,
             method: 'GET',
             headers: {
@@ -275,6 +279,8 @@ describe('ProxyFixtures', function() {
           });
 
           assert.deepEqual(res, {
+            status: 200,
+            statusText: undefined,
             responseTime: 0,
             method: 'GET',
             headers: {
@@ -420,6 +426,46 @@ describe('ProxyFixtures', function() {
           }
         }
       });
+    }); 
+
+    it('adds erroring request to cachedRequests', function() {
+      assert.equal(proxyFixtures.cachedRequests.length, 0);
+
+      proxyFixtures.cacheRequest(null, {
+        getAllResponseHeaders: function() {
+          return 'x-random-header:false';
+        },
+        responseText: '{"user":{"name":"Jake"}}',
+        status: 401,
+        statusText: 'Unauthorized'
+      }, {
+        url: 'http://localhost:4000/api/v1/private-users/1',
+        type: 'GET',
+        headers: {
+          'x-module-name': 'test',
+          'x-test-name': 'test'
+        }
+      });
+
+      assert.equal(proxyFixtures.cachedRequests.length, 1);
+      assert.deepEqual(proxyFixtures.cachedRequests[0], {
+        url:         'http://localhost:4000/api/v1/private-users/1',
+        statusCode:  401,
+        statusText:  'Unauthorized',
+        method:      'GET',
+        reqHeaders: {
+          'x-module-name': 'test',
+          'x-test-name': 'test'
+        },
+        headers: {
+          'x-random-header': 'false'
+        },
+        body: {
+          user: {
+            name: 'Jake'
+          }
+        }
+      });
     });
   });
 
@@ -445,7 +491,7 @@ describe('ProxyFixtures', function() {
 
         assert.equal(parsed.path, url);
       });
-    })
+    });
 
     describe('query', function() {
       it('is present', function() {

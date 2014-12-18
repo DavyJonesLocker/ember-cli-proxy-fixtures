@@ -74,6 +74,15 @@ describe('Middleware', function() {
               statusCode: 200,
               headers: {},
               body: { users: [] }
+            },
+            {
+              reqHeaders: { 'x-module-name': 'test', 'x-test-name': 'test-get' },
+              method: 'GET',
+              url: '/private-users',
+              statusCode: 401,
+              statusText: 'Unauthorized',
+              headers: {},
+              body: { users: [] }
             }
           ]);
 
@@ -102,6 +111,17 @@ describe('Middleware', function() {
           assert.equal(fixture.body, '{"users":[]}');
           assert.deepEqual(fixture.headers, {});
 
+        });
+        
+        it ('records an errored response', function () {
+          var fixture = this.fixture['/private-users']['get'][''].fixtures[0];
+          
+          assert.deepEqual(Object.keys(fixture),
+                          ['statusCode', 'statusText', 'headers', 'body']);
+          assert.equal(fixture.statusCode, 401);
+          assert.equal(fixture.statusText, "Unauthorized");
+          assert.equal(fixture.body, '{"users":[]}');
+          assert.deepEqual(fixture.headers, {});
         });
       });
 
