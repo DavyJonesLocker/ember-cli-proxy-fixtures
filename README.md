@@ -1,5 +1,7 @@
 # Ember CLI Proxy Fixtures
 
+**[ember-cli-proxy-fixtures is built and maintained by DockYard, contact us for expert Ember.js consulting](https://dockyard.com/ember-consulting)**.
+
 ## About ##
 
 Capture Ember CLI proxy server responses for faster playback on the
